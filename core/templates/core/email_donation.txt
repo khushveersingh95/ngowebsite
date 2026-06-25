@@ -1,0 +1,12 @@
+Dear {{ donation.donor_name }},
+
+Thank you for your generous donation to {{ site_settings.ngo_name|default:"Helping Hands NGO" }}.
+
+Amount: INR {{ donation.amount }}
+Payment ID: {{ donation.razorpay_payment_id }}
+
+Your support helps us continue our mission:
+{{ site_settings.mission_statement }}
+
+Regards,
+{{ site_settings.ngo_name|default:"Helping Hands NGO" }}

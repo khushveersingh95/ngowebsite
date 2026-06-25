@@ -1,0 +1,617 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<style>
+  /* Advanced Designer UI Variable Tokens */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius-lg: 32px;
+    --curve-radius-md: 20px;
+    --spring-transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* -----------------------------------------
+     1. SPLIT CINEMATIC HERO DESIGN
+  ----------------------------------------- */
+  .hero-home-canvas {
+    position: relative;
+    padding: 8rem 0;
+    background: radial-gradient(circle at 100% 100%, rgba(26, 86, 219, 0.05) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 0% 0%, rgba(30, 64, 175, 0.08) 0%, rgba(255, 255, 255, 0) 40%),
+                #FFFFFF;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+
+  /* Background Mesh Pattern Overlays */
+  .hero-home-canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(to right, rgba(26, 86, 219, 0.02) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(26, 86, 219, 0.02) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+    pointer-events: none;
+  }
+
+  .home-hero-panel {
+    position: relative;
+    z-index: 5;
+  }
+
+  .home-hero-panel h1 {
+    font-size: 4.25rem;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.05em;
+    color: var(--deep-ink);
+    margin-bottom: 1.5rem;
+  }
+
+  .home-hero-panel h1 span {
+    background: linear-gradient(135deg, #1E40AF 0%, var(--brand-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .home-hero-panel p {
+    font-size: 1.35rem;
+    line-height: 1.6;
+    color: var(--slate-text);
+    max-width: 580px;
+    margin-bottom: 2.5rem;
+  }
+
+  /* Main Action Triggers Layout */
+  .hero-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .btn-premium-primary {
+    background-color: var(--brand-blue);
+    color: #FFFFFF !important;
+    border: none;
+    padding: 1.1rem 2.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px -5px rgba(26, 86, 219, 0.3);
+    text-decoration: none;
+    transition: var(--spring-transition);
+  }
+  .btn-premium-primary:hover {
+    background-color: #1445B3;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(26, 86, 219, 0.42);
+  }
+
+  .btn-premium-secondary {
+    background-color: #FFFFFF;
+    color: var(--deep-ink) !important;
+    border: 1.5px solid var(--border-light);
+    padding: 1.1rem 2.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 14px;
+    text-decoration: none;
+    transition: var(--spring-transition);
+  }
+  .btn-premium-secondary:hover {
+    background-color: #F8FAFC;
+    border-color: rgba(26, 86, 219, 0.2);
+    color: var(--brand-blue) !important;
+    transform: translateY(-2px);
+  }
+
+  /* Structural Narrative Imagery Mosaic Side Frame */
+  .hero-mosaic-container {
+    position: relative;
+    width: 100%;
+    height: 520px;
+  }
+
+  .hero-mosaic-card {
+    position: absolute;
+    border-radius: var(--curve-radius-lg);
+    overflow: hidden;
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.12);
+    border: 4px solid #FFFFFF;
+    transition: var(--spring-transition);
+    background-color: #F1F5F9;
+  }
+
+  .hero-mosaic-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--spring-transition);
+  }
+
+  .hero-mosaic-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    z-index: 10 !important;
+    box-shadow: 0 35px 60px -15px rgba(26, 86, 219, 0.22);
+  }
+
+  .hm-main { top: 0; left: 12%; width: 60%; height: 75%; z-index: 3; }
+  .hm-sub-one { bottom: 0; left: 0; width: 42%; height: 45%; z-index: 4; border-radius: var(--curve-radius-md); }
+  .hm-sub-two { top: 20%; right: 0; width: 40%; height: 50%; z-index: 2; border-radius: var(--curve-radius-md); }
+
+  /* -----------------------------------------
+     2. MISSION AND STAT MATRIX SECTIONS
+  ----------------------------------------- */
+  .section-padding {
+    padding: 7rem 0;
+  }
+
+  .section-eyebrow {
+    display: inline-block;
+    background-color: rgba(26, 86, 219, 0.08);
+    color: var(--brand-blue);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-heading {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .mission-statement-lead {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: var(--slate-text);
+  }
+
+  /* Architectural Grid Stat Tiles */
+  .stat-grid-box {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-md);
+    padding: 2.25rem 1.75rem;
+    text-align: center;
+    box-shadow: 0 10px 25px -10px rgba(15, 23, 42, 0.02);
+    height: 100%;
+    transition: var(--spring-transition);
+  }
+  .stat-grid-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 35px -10px rgba(26, 86, 219, 0.06);
+    border-color: rgba(26, 86, 219, 0.15);
+  }
+  .stat-grid-box strong {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #1E40AF 0%, var(--brand-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+  }
+  .stat-grid-box span {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--slate-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* -----------------------------------------
+     3. SLICK EDITORIAL TESTIMONIAL SLIDER
+  ----------------------------------------- */
+  .slider-wrapper-canvas {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-lg);
+    padding: 4.5rem;
+    box-shadow: 0 15px 40px -15px rgba(15, 23, 42, 0.03);
+    position: relative;
+  }
+  .quote-icon-mark {
+    position: absolute;
+    top: 3rem;
+    left: 4.5rem;
+    font-size: 4rem;
+    color: rgba(26, 86, 219, 0.08);
+    line-height: 1;
+  }
+  .testimonial-narrative-box {
+    max-width: 740px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .testimonial-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.75rem;
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  }
+  .testimonial-narrative-box p {
+    font-size: 1.4rem;
+    line-height: 1.7;
+    font-style: italic;
+    color: var(--deep-ink);
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+  .testimonial-narrative-box strong {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    letter-spacing: -0.01em;
+  }
+  .testimonial-narrative-box span {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--brand-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* -----------------------------------------
+     4. RECENT MOMENTS MEDIA SECTIONS
+  ----------------------------------------- */
+  .home-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .home-gallery-card {
+    position: relative;
+    border-radius: var(--curve-radius-md);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 10px 25px -10px rgba(15, 23, 42, 0.03);
+    display: block;
+    transition: var(--spring-transition);
+  }
+  .home-gallery-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--spring-transition);
+  }
+  .home-gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.8) 0%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: var(--spring-transition);
+  }
+  .home-gallery-overlay span {
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 1rem;
+    transform: translateY(8px);
+    transition: var(--spring-transition);
+  }
+  .home-gallery-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.08);
+  }
+  .home-gallery-card:hover img { transform: scale(1.04); }
+  .home-gallery-card:hover .home-gallery-overlay { opacity: 1; }
+  .home-gallery-card:hover .home-gallery-overlay span { transform: translateY(0); }
+
+  /* -----------------------------------------
+     5. HIGH-FOCUS CTA RADIAL BAND
+  ----------------------------------------- */
+  .home-cta-capsule {
+    background: radial-gradient(circle at top right, #1E40AF 0%, var(--brand-blue) 100%);
+    border-radius: var(--curve-radius-lg);
+    padding: 4.5rem;
+    color: #FFFFFF;
+    box-shadow: 0 20px 45px -10px rgba(26, 86, 219, 0.25);
+    position: relative;
+    overflow: hidden;
+  }
+  .home-cta-capsule::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .home-cta-capsule h2 {
+    font-size: 2.75rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 0.75rem;
+  }
+  .home-cta-capsule p {
+    font-size: 1.15rem;
+    opacity: 0.9;
+    max-width: 520px;
+    margin-bottom: 0;
+  }
+  .btn-cta-light {
+    background-color: #FFFFFF;
+    color: var(--brand-blue) !important;
+    padding: 1rem 2.25rem;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    transition: var(--spring-transition);
+  }
+  .btn-cta-light:hover {
+    background-color: #F8FAFC;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+  }
+  .btn-cta-warning {
+    background-color: #F59E0B;
+    color: #FFFFFF !important;
+    padding: 1rem 2.25rem;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.2);
+    transition: var(--spring-transition);
+  }
+  .btn-cta-warning:hover {
+    background-color: #D97706;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(245, 158, 11, 0.35);
+  }
+
+  /* Structural Responsiveness Overrides */
+  @media (max-width: 991.98px) {
+    .hero-home-canvas { padding: 5rem 0; text-align: center; }
+    .hero-btn-group { justify-content: center; }
+    .home-hero-panel h1 { font-size: 2.85rem; }
+    .home-hero-panel p { font-size: 1.15rem; margin: 0 auto 2.5rem auto; }
+    .hero-mosaic-container { height: 400px; max-width: 500px; margin: 3.5rem auto 0 auto; }
+    .section-padding { padding: 4.5rem 0; }
+    .section-heading { font-size: 2rem; }
+    .slider-wrapper-canvas { padding: 2.5rem 1.5rem; }
+    .quote-icon-mark { display: none; }
+    .testimonial-narrative-box p { font-size: 1.15rem; }
+    .home-cta-capsule { padding: 2.5rem 1.5rem; text-align: center; }
+    .home-cta-capsule h2 { font-size: 2rem; }
+    .home-cta-capsule p { margin-bottom: 2rem; }
+  }
+</style>
+
+<!-- 1. SPLIT CINEMATIC HERO LAYER BLOCK -->
+<section class="hero-home-canvas">
+  <div class="container px-4">
+    <div class="row g-5 align-items-center">
+
+      <!-- Left Panel: Headline Narrative Blueprint -->
+      <div class="col-lg-6">
+        <div class="home-hero-panel">
+          <h1>{{ banner.title|default:"Empower Fields, Change <span>Human Realities</span>." }}</h1>
+          <p>{{ banner.subtitle|default:"We assemble structured framework pipelines and data-backed deployment maps to safeguard communities where protection is required most." }}</p>
+
+          <div class="hero-btn-group">
+            <a href="{{ banner.button_link|default:'/donate/' }}" class="btn-premium-primary">
+              {{ banner.button_text|default:"Support A Priority" }}
+            </a>
+            <a href="{% url 'volunteer' %}" class="btn-premium-secondary">Join As Volunteer</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Geometric Mosaic Grid Artwork -->
+      <div class="col-lg-6">
+        <div class="hero-mosaic-container">
+          <div class="hero-mosaic-card hm-main">
+            {% if banner.image %}
+              <img src="{{ banner.image.url }}" alt="Primary Dynamic Banner">
+            {% else %}
+              <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="Primary field alignment infrastructure">
+            {% endif %}
+          </div>
+          <div class="hero-mosaic-card hm-sub-one">
+            <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=400&q=80" alt="Volunteers distributing resources">
+          </div>
+          <div class="hero-mosaic-card hm-sub-two">
+            <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=400&q=80" alt="Governance coordination array workshop">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 2. MISSION LEAD AND IMPACT TILE METRICS ROW -->
+<section class="section-padding bg-white">
+  <div class="container px-4">
+    <div class="row g-5 align-items-center">
+
+      <div class="col-lg-6">
+        <span class="section-eyebrow">Our Mission Matrix</span>
+        <h2 class="section-heading">Practical help for people who need it most.</h2>
+        <p class="mission-statement-lead text-secondary">
+          {{ mission.mission_statement|default:"Our program interfaces replace administrative delays with rapid operational logistics. We construct transparent resource networks that provide direct support for public health clinics, foundational education hubs, and clean water operations." }}
+        </p>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="row g-4">
+          <div class="col-6">
+            <div class="stat-grid-box">
+              <strong>{{ impact.lives|default:"12,500" }}+</strong>
+              <span>Lives Reached</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-grid-box">
+              <strong>{{ impact.campaigns|default:"8" }}</strong>
+              <span>Active Deployments</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-grid-box">
+              <strong>{{ impact.volunteers|default:"450" }}+</strong>
+              <span>Registered Staff</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-grid-box">
+              <strong>{{ impact.donations|default:"3.2K" }}</strong>
+              <span>Audited Tranches</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DYNAMIC BACKEND LAYOUT INCLUDES (CAUSES & CAMPAIGNS INJECTED ROUTER MARKS) -->
+{% include 'core/partials/causes_grid.html' with causes=causes title='Causes We Support' %}
+{% include 'core/partials/campaigns_grid.html' with campaigns=campaigns title='Featured Campaigns' %}
+
+<!-- 3. PREMIUM DESIGNER EDITORIAL SLIDER SECTION -->
+<section class="section-padding">
+  <div class="container px-4">
+    <div class="text-center mb-5">
+      <span class="section-eyebrow">Accountability Records</span>
+      <h2 class="section-heading mb-0">Voices From Our Field Nodes</h2>
+    </div>
+
+    <div class="slider-wrapper-canvas">
+      <div class="quote-icon-mark"><i class="bi bi-quote"></i></div>
+
+      <div id="testimonialSlider" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {% for item in testimonials %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <div class="testimonial-narrative-box">
+                {% if item.image %}
+                  <img src="{{ item.image.url }}" alt="{{ item.name }}" class="testimonial-avatar">
+                {% endif %}
+                <p>"{{ item.story }}"</p>
+                <strong>{{ item.name }}</strong>
+                <span>{{ item.role }}</span>
+              </div>
+            </div>
+          {% empty %}
+            <!-- Curated, Human-Centric Default Testimonial Fallback Layout -->
+            <div class="carousel-item active">
+              <div class="testimonial-narrative-box">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Fallback User Avatar Image" class="testimonial-avatar">
+                <p>"The localized tracking framework implemented here completely transformed our regional supply chains. We went from speculative delivery schedules to transparent distribution within hours."</p>
+                <strong>Elena Rostova</strong>
+                <span>Clinic Management Registrar</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Subtle Minimal Slide Controls -->
+        <button class="carousel-control-prev opacity-25 d-none d-md-flex" type="button" data-bs-target="#testimonialSlider" data-bs-slide="prev">
+          <i class="bi bi-chevron-left text-dark h3"></i>
+        </button>
+        <button class="carousel-control-next opacity-25 d-none d-md-flex" type="button" data-bs-target="#testimonialSlider" data-bs-slide="next">
+          <i class="bi bi-chevron-right text-dark h3"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 4. MODERN GALLERY RECENT MOMENTS COMPONENT -->
+<section class="section-padding bg-white">
+  <div class="container px-4">
+    <div class="text-center mb-5">
+      <span class="section-eyebrow">Field Evidence</span>
+      <h2 class="section-heading mb-0">Recent Operational Chronicles</h2>
+    </div>
+
+    <div class="home-gallery-grid">
+      {% for item in gallery_items %}
+        {% if item.image %}
+          <a href="{{ item.image.url }}" class="home-gallery-card">
+            <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
+            <div class="home-gallery-overlay">
+              <span>{{ item.title }}</span>
+            </div>
+          </a>
+        {% endif %}
+      {% empty %}
+        <!-- Fine Styled Mock Gallery fallbacks -->
+        <div class="home-gallery-card">
+          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=400&q=80" alt="Mock Media item row">
+          <div class="home-gallery-overlay"><span>Educational Resource Dispatch</span></div>
+        </div>
+        <div class="home-gallery-card">
+          <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=400&q=80" alt="Mock Media item row">
+          <div class="home-gallery-overlay"><span>Rural Health Camp Verification</span></div>
+        </div>
+        <div class="home-gallery-card">
+          <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=400&q=80" alt="Mock Media item row">
+          <div class="home-gallery-overlay"><span>Agroforestry Framework Ground-breaking</span></div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 5. HIGH-FOCUS RADIAL CTA CLOSING BAND CAPSULE -->
+<section class="section-padding">
+  <div class="container px-4">
+    <div class="home-cta-capsule">
+      <div class="row g-4 align-items-center justify-content-between position-relative z-2">
+        <div class="col-xl-7 col-lg-8">
+          <h2>Ready to help build a path forward?</h2>
+          <p>Join our decentralized on-the-ground volunteer grid or support a time-sensitive campaign with a fully encrypted, audited donation block.</p>
+        </div>
+        <div class="col-xl-4 col-lg-4 text-lg-end">
+          <div class="d-flex flex-wrap gap-3 justify-content-lg-end">
+            <a href="{% url 'volunteer' %}" class="btn-cta-light">Join Framework</a>
+            <a href="{% url 'donate' %}" class="btn-cta-warning">Support Priority</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. MINIMAL SYSTEM COMMON QUESTIONS DISPLAY MODULE -->
+<section class="section-padding bg-white">
+  <div class="container px-4" style="max-width: 900px;">
+    <div class="text-center mb-5">
+      <span class="section-eyebrow">Frictionless Knowledge</span>
+      <h2 class="section-heading mb-0">Common Inquiries Desk</h2>
+    </div>
+    {% include 'core/partials/faq_accordion.html' with faqs=faqs %}
+  </div>
+</section>
+{% endblock %}

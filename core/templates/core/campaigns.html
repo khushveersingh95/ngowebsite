@@ -1,0 +1,454 @@
+{% extends 'core/base.html' %}
+{% block title %}Campaigns | {{ site_settings.ngo_name }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Premium Design Tokens */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --emerald-green: #10B981;
+    --amber-warning: #D97706;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius-md: 20px;
+    --spring-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* Structural Minimalist Hero Banner */
+  .campaigns-hero {
+    background: radial-gradient(circle at 0% 100%, rgba(26, 86, 219, 0.06) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 100% 0%, rgba(30, 64, 175, 0.08) 0%, rgba(255, 255, 255, 0) 40%),
+                #FFFFFF;
+    position: relative;
+    padding: 6.5rem 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+  .campaigns-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(26, 86, 219, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    pointer-events: none;
+  }
+  .campaigns-hero h1 {
+    font-size: 3.75rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--deep-ink);
+    margin-bottom: 1rem;
+  }
+  .campaigns-hero h1 span {
+    background: linear-gradient(135deg, #1E40AF 0%, var(--brand-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .campaigns-hero p {
+    font-size: 1.25rem;
+    color: var(--slate-text);
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Grid Layout Architecture */
+  .campaigns-section {
+    padding: 6rem 0;
+  }
+
+  .section-eyebrow {
+    display: inline-block;
+    background-color: rgba(26, 86, 219, 0.08);
+    color: var(--brand-blue);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-heading {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    letter-spacing: -0.03em;
+    margin-bottom: 3.5rem;
+  }
+
+  /* Premium Strategic Campaign Card */
+  .campaign-card-wrapper {
+    background: #FFFFFF;
+    border-radius: var(--curve-radius-md);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.03);
+    transition: var(--spring-transition);
+  }
+  .campaign-card-wrapper:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 50px -15px rgba(26, 86, 219, 0.12);
+  }
+
+  .campaign-img-box {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Cinema Aspect Ratio */
+    background-color: #F1F5F9;
+    overflow: hidden;
+  }
+  .campaign-img-box img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--spring-transition);
+  }
+  .campaign-card-wrapper:hover .campaign-img-box img {
+    transform: scale(1.04);
+  }
+
+  /* Status Badges */
+  .campaign-status-badge {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .status-active {
+    background-color: #FFFFFF;
+    color: var(--brand-blue);
+    border: 1px solid rgba(26, 86, 219, 0.2);
+  }
+  .status-urgent {
+    background-color: var(--amber-warning);
+    color: #FFFFFF;
+  }
+
+  /* Info Meta Layer */
+  .campaign-card-content {
+    padding: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .campaign-card-content h3 {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+  }
+  .campaign-card-content p {
+    font-size: 0.98rem;
+    color: var(--slate-text);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+  }
+
+  /* Data Row Matrix Box */
+  .campaign-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1xl);
+    display: flex;
+    justify-content: space-between;
+    background-color: #F8FAFC;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-light);
+  }
+  .metric-block {
+    display: flex;
+    flex-direction: column;
+  }
+  .metric-block span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--slate-text);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.15rem;
+  }
+  .metric-block strong {
+    font-size: 1.05rem;
+    font-weight: 750;
+    color: var(--deep-ink);
+  }
+  .metric-block strong.highlight-green {
+    color: var(--emerald-green);
+  }
+
+  /* Timeline Tracking Row */
+  .campaign-timeline-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--slate-text);
+    margin-bottom: 1.5rem;
+    margin-top: auto;
+  }
+  .campaign-timeline-status svg {
+    color: var(--brand-blue);
+  }
+
+  /* Linear Progress Indicator */
+  .progress-track-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #E2E8F0;
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+  .progress-fill-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand-blue) 0%, #3B82F6 100%);
+    border-radius: 100px;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .fill-urgent {
+    background: linear-gradient(90deg, var(--amber-warning) 0%, #F59E0B 100%);
+  }
+
+  /* Interactive Secondary Action Component */
+  .btn-campaign-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    background-color: #FFFFFF;
+    color: var(--brand-blue);
+    border: 1.5px solid var(--brand-blue);
+    padding: 0.85rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: var(--spring-transition);
+  }
+  .campaign-card-wrapper:hover .btn-campaign-action {
+    background-color: var(--brand-blue);
+    color: #FFFFFF;
+    box-shadow: 0 10px 20px -5px rgba(26, 86, 219, 0.3);
+  }
+  .btn-campaign-action svg {
+    transition: transform 0.3s ease;
+  }
+  .campaign-card-wrapper:hover .btn-campaign-action svg {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 991.98px) {
+    .campaigns-hero { padding: 4.5rem 0; }
+    .campaigns-hero h1 { font-size: 2.75rem; }
+    .campaigns-section { padding: 4.5rem 0; }
+    .campaign-card-content { padding: 1.5rem; }
+  }
+</style>
+
+<!-- 1. MODERN HERO HERO SPLASH -->
+<section class="campaigns-hero">
+  <div class="container px-4">
+    <h1>Live <span>Campaigns</span> & Goals</h1>
+    <p>Track real-time fiscal targets, transparent funding allocations, milestones, and time-bound project timelines.</p>
+  </div>
+</section>
+
+<!-- 2. MAIN TARGET ARRAYS GRID -->
+<section class="campaigns-section">
+  <div class="container px-4">
+
+    <div class="text-center mb-2">
+      <span class="section-eyebrow">Time-Sensitive Objectives</span>
+      <h2 class="section-heading">Active Impact Deployments</h2>
+    </div>
+
+    <!-- Render original partial content grid context if assigned -->
+    {% if campaigns %}
+      {% include 'core/partials/campaigns_grid.html' with campaigns=campaigns title='All Campaigns' %}
+    {% else %}
+
+      <!-- Premium Design Studio Fallback Content Arrays -->
+      <div class="row g-4 justify-content-center">
+
+        <!-- Campaign Module 1 -->
+        <div class="col-xl-4 col-md-6">
+          <div class="campaign-card-wrapper">
+            <div class="campaign-img-box">
+              <span class="campaign-status-badge status-active">Active Campaign</span>
+              <img src="https://images.unsplash.com/photo-1469571486040-7a9526732283?auto=format&fit=crop&w=600&q=80" alt="Winter Relief Campaign">
+            </div>
+            <div class="campaign-card-content">
+              <h3>Winter Shelter & Comfort Deployment</h3>
+              <p>Distributing high-density insulation materials, thermal blankets, and temporary modular housing packs to vulnerable mountain transit clusters.</p>
+
+              <div class="campaign-metrics-grid">
+                <div class="metric-block">
+                  <span>Raised</span>
+                  <strong class="highlight-green">$42,800</strong>
+                </div>
+                <div class="metric-block">
+                  <span>Goal</span>
+                  <strong>$50,000</strong>
+                </div>
+                <div class="metric-block">
+                  <span>Backers</span>
+                  <strong>312</strong>
+                </div>
+              </div>
+
+              <div class="campaign-timeline-status">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>14 Days Remaining</span>
+              </div>
+
+              <div class="progress-track-bar">
+                <div class="progress-fill-bar" style="width: 85%;"></div>
+              </div>
+
+              <a href="#" class="btn-campaign-action">
+                <span>Track Milestones & Support</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Campaign Module 2 -->
+        <div class="col-xl-4 col-md-6">
+          <div class="campaign-card-wrapper">
+            <div class="campaign-img-box">
+              <span class="campaign-status-badge status-urgent">Critical Urgency</span>
+              <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=600&q=80" alt="Emergency Medical Equipment">
+            </div>
+            <div class="campaign-card-content">
+              <h3>Surgical Unit Oxygen Generators</h3>
+              <p>Procuring and custom-fitting independent atmospheric oxygen concentrator arrays inside regional nonprofit crisis clinics.</p>
+
+              <div class="campaign-metrics-grid">
+                <div class="metric-block">
+                  <span>Raised</span>
+                  <strong class="highlight-green">$11,200</strong>
+                </div>
+                <div class="metric-block">
+                  <span>Goal</span>
+                  <strong>$25,000</strong>
+                </div>
+                <div class="metric-block">
+                  <span>Backers</span>
+                  <strong>89</strong>
+                </div>
+              </div>
+
+              <div class="campaign-timeline-status">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span class="text-danger">48 Hours Left</span>
+              </div>
+
+              <div class="progress-track-bar">
+                <div class="progress-fill-bar fill-urgent" style="width: 44%;"></div>
+              </div>
+
+              <a href="#" class="btn-campaign-action">
+                <span>Track Milestones & Support</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Campaign Module 3 -->
+        <div class="col-xl-4 col-md-6">
+          <div class="campaign-card-wrapper">
+            <div class="campaign-img-box">
+              <span class="campaign-status-badge status-active">Active Campaign</span>
+              <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80" alt="Sustainable Reforestation">
+            </div>
+            <div class="campaign-card-content">
+              <h3>Urban Agroforestry & Micro-Farming</h3>
+              <p>Constructing shared community agricultural fields to optimize local food autonomy, organic soil stabilization, and youth employment channels.</p>
+
+              <div class="campaign-metrics-grid">
+                <div class="metric-block">
+                  <span>Raised</span>
+                  <strong class="highlight-green">$30,150</strong>
+                </div>
+                <div class="metric-block">
+                  <span>Goal</span>
+                  <strong>$30,000</strong>
+                </div>
+                <div class="metric-block">
+                  <span>Backers</span>
+                  <strong>245</strong>
+                </div>
+              </div>
+
+              <div class="campaign-timeline-status">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span class="text-success">100% Funded</span>
+              </div>
+
+              <div class="progress-track-bar">
+                <div class="progress-fill-bar" style="width: 100%;"></div>
+              </div>
+
+              <a href="#" class="btn-campaign-action">
+                <span>Track Milestones & Support</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

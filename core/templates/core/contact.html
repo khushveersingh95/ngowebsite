@@ -1,0 +1,328 @@
+{% extends 'core/base.html' %}
+{% block title %}Contact | {{ site_settings.ngo_name }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Advanced Designer Variable Architecture */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius: 24px;
+    --spring-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Body background adjustment for context separation */
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* Structural Page Container */
+  .contact-wrapper {
+    position: relative;
+    padding: 6rem 0 8rem 0;
+    overflow: hidden;
+  }
+
+  /* Organic Fluid Ambient Orb behind the elements */
+  .ambient-blur {
+    position: absolute;
+    top: 25%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(26, 86, 219, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    z-index: 1;
+    pointer-events: none;
+    animation: pulseOrb 12s infinite ease-in-out;
+  }
+
+  @keyframes pulseOrb {
+    0%, 100% { transform: scale(1) translate(0, 0); }
+    50% { transform: scale(1.15) translate(-30px, 20px); }
+  }
+
+  /* Modern Designer Header Hierarchy */
+  .section-intro {
+    margin-bottom: 4.5rem;
+    position: relative;
+    z-index: 2;
+  }
+  .tagline-badge {
+    display: inline-block;
+    background-color: rgba(26, 86, 219, 0.08);
+    color: var(--brand-blue);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .section-intro h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+  }
+  .section-intro p {
+    font-size: 1.2rem;
+    color: var(--slate-text);
+    max-width: 580px;
+    line-height: 1.6;
+  }
+
+  /* Main Dynamic Workspace Row */
+  .interactive-grid {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Luxury White Interactive Shell */
+  .form-canvas {
+    background: #FFFFFF;
+    padding: 3.5rem;
+    border-radius: var(--curve-radius);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.03);
+    transition: var(--spring-transition);
+  }
+  .form-canvas:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 35px 60px -15px rgba(26, 86, 219, 0.08);
+  }
+
+  /* Sleek Django Field Formatting Overrides */
+  .form-canvas form p {
+    margin-bottom: 1.75rem;
+    position: relative;
+  }
+  .form-canvas form label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--deep-ink);
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+  .form-canvas form input,
+  .form-canvas form textarea,
+  .form-canvas form select {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 1.5px solid var(--border-light);
+    border-radius: 12px;
+    color: var(--deep-ink);
+    background-color: #FFFFFF;
+    font-size: 0.98rem;
+    transition: var(--spring-transition);
+  }
+  .form-canvas form input:focus,
+  .form-canvas form textarea:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(var(--brand-blue-rgb), 0.08);
+  }
+
+  /* Tactile Action Button Architecture */
+  .btn-premium-action {
+    background-color: var(--brand-blue);
+    color: #FFFFFF;
+    border: none;
+    padding: 1.1rem 2.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 12px;
+    width: 100%;
+    letter-spacing: -0.01em;
+    box-shadow: 0 10px 25px -5px rgba(26, 86, 219, 0.3);
+    transition: var(--spring-transition);
+    cursor: pointer;
+  }
+  .btn-premium-action:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(26, 86, 219, 0.42);
+    color: #FFFFFF;
+  }
+
+  /* Asymmetrical Glass Contact Panel */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 3.5rem 3rem;
+    border-radius: var(--curve-radius);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.02);
+  }
+  .glass-panel h3 {
+    color: var(--deep-ink);
+    font-weight: 800;
+    font-size: 1.75rem;
+    letter-spacing: -0.03em;
+    margin-bottom: 2.5rem;
+  }
+
+  /* Minimalist Visual Row Structures */
+  .designer-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2.25rem;
+  }
+  .designer-icon-box {
+    background-color: #FFFFFF;
+    color: var(--brand-blue);
+    padding: 0.9rem;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.04);
+    border: 1px solid var(--border-light);
+  }
+  .designer-meta {
+    display: flex;
+    flex-direction: column;
+  }
+  .designer-meta span {
+    color: var(--slate-text);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.35rem;
+    opacity: 0.8;
+  }
+  .designer-meta p,
+  .designer-meta a {
+    color: var(--deep-ink);
+    font-size: 1.05rem;
+    font-weight: 550;
+    margin: 0;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+  .designer-meta a {
+    background-image: linear-gradient(rgba(26, 86, 219, 0.3), rgba(26, 86, 219, 0.3));
+    background-position: 0% 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 2px;
+    transition: var(--spring-transition);
+  }
+  .designer-meta a:hover {
+    color: var(--brand-blue);
+    background-size: 100% 2px;
+  }
+
+  /* Fine-tuned Layout Responsiveness */
+  @media (max-width: 991.98px) {
+    .section-intro h1 { font-size: 2.75rem; }
+    .form-canvas, .glass-panel { padding: 2.5rem 2rem; }
+    .contact-wrapper { padding: 4rem 0; }
+  }
+</style>
+
+<main class="contact-wrapper">
+  <!-- Soft, interactive depth layer -->
+  <div class="ambient-blur"></div>
+
+  <div class="container px-4">
+    <!-- Intro Typography Blocks -->
+    <div class="row">
+      <div class="col-12">
+        <div class="section-intro">
+          <span class="tagline-badge">Connect with us</span>
+          <h1>Let’s Make a Difference</h1>
+          <p>Have questions about our initiatives, want to volunteer, or discuss partnership opportunities? Send a message directly to our core team.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interface Workspace Grid split -->
+    <div class="row g-4 lg-g-5 interactive-grid align-items-stretch">
+
+      <!-- Interactive Form Module -->
+      <div class="col-xl-7 col-lg-6">
+        <div class="form-canvas">
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn-premium-action mt-3" type="submit">
+              Send Secure Message
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Asymmetrical Soft Glass Info Module -->
+      <div class="col-xl-5 col-lg-6">
+        <div class="glass-panel">
+          <div>
+            <h3>{{ site_settings.ngo_name }}</h3>
+
+            <!-- Address Layout Point -->
+            <div class="designer-row">
+              <div class="designer-icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+              <div class="designer-meta">
+                <span>Headquarters</span>
+                <p>{{ site_settings.address }}</p>
+              </div>
+            </div>
+
+            <!-- Email Layout Point -->
+            <div class="designer-row">
+              <div class="designer-icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
+              <div class="designer-meta">
+                <span>Direct Email</span>
+                <a href="mailto:{{ site_settings.email }}">
+                  {{ site_settings.email }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Phone Layout Point -->
+            <div class="designer-row">
+              <div class="designer-icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+              </div>
+              <div class="designer-meta">
+                <span>Call Center Support</span>
+                <a href="tel:{{ site_settings.phone }}">
+                  {{ site_settings.phone }}
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+{% endblock %}

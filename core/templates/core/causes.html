@@ -1,0 +1,360 @@
+{% extends 'core/base.html' %}
+{% block title %}Causes | {{ site_settings.ngo_name }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Premium Design Tokens */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --emerald-green: #10B981;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius-md: 20px;
+    --spring-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* Modern Mesh Hero Banner */
+  .causes-hero {
+    background: radial-gradient(circle at 100% 100%, rgba(26, 86, 219, 0.06) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 0% 0%, rgba(30, 64, 175, 0.08) 0%, rgba(255, 255, 255, 0) 40%),
+                #FFFFFF;
+    position: relative;
+    padding: 6.5rem 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+  .causes-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(26, 86, 219, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    pointer-events: none;
+  }
+  .causes-hero h1 {
+    font-size: 3.75rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--deep-ink);
+    margin-bottom: 1rem;
+  }
+  .causes-hero h1 span {
+    background: linear-gradient(135deg, #1E40AF 0%, var(--brand-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .causes-hero p {
+    font-size: 1.25rem;
+    color: var(--slate-text);
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Main Dynamic Section Padding */
+  .causes-section {
+    padding: 6rem 0;
+  }
+
+  .section-eyebrow {
+    display: inline-block;
+    background-color: rgba(26, 86, 219, 0.08);
+    color: var(--brand-blue);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-heading {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    letter-spacing: -0.03em;
+    margin-bottom: 3.5rem;
+  }
+
+  /* Luxury Interactive Program/Cause Card */
+  .cause-card-wrapper {
+    background: #FFFFFF;
+    border-radius: var(--curve-radius-md);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.03);
+    transition: var(--spring-transition);
+  }
+  .cause-card-wrapper:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 50px -15px rgba(26, 86, 219, 0.12);
+  }
+
+  .cause-img-box {
+    position: relative;
+    width: 100%;
+    padding-top: 60%; /* Fluid 16:10 Aspect Ratio */
+    background-color: #F1F5F9;
+    overflow: hidden;
+  }
+  .cause-img-box img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--spring-transition);
+  }
+  .cause-card-wrapper:hover .cause-img-box img {
+    transform: scale(1.05);
+  }
+
+  /* Program Badge Tag Overlay */
+  .cause-tag-badge {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    padding: 0.35rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 3;
+  }
+
+  /* Content Panel Layout within Card */
+  .cause-card-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .cause-card-content h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1.4;
+  }
+  .cause-card-content p {
+    font-size: 0.98rem;
+    color: var(--slate-text);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+  }
+
+  /* Linear Progress Metric Meter Systems */
+  .metric-progress-container {
+    margin-top: auto;
+    margin-bottom: 1.5rem;
+  }
+  .metric-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--slate-text);
+    margin-bottom: 0.5rem;
+  }
+  .metric-label-row strong {
+    color: var(--deep-ink);
+  }
+  .progress-track-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #E2E8F0;
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-fill-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand-blue) 0%, #3B82F6 100%);
+    border-radius: 100px;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Clean Action Trigger Button link */
+  .btn-cause-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    background-color: #F8FAFC;
+    color: var(--brand-blue);
+    border: 1px solid var(--border-light);
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: var(--spring-transition);
+  }
+  .cause-card-wrapper:hover .btn-cause-action {
+    background-color: var(--brand-blue);
+    color: #FFFFFF;
+    border-color: var(--brand-blue);
+    box-shadow: 0 10px 20px -5px rgba(26, 86, 219, 0.25);
+  }
+  .btn-cause-action svg {
+    transition: transform 0.3s ease;
+  }
+  .cause-card-wrapper:hover .btn-cause-action svg {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 991.98px) {
+    .causes-hero { padding: 4.5rem 0; }
+    .causes-hero h1 { font-size: 2.75rem; }
+    .causes-section { padding: 4.5rem 0; }
+    .cause-card-content { padding: 1.5rem; }
+  }
+</style>
+
+<!-- Modern Dynamic Hero Area -->
+<section class="causes-hero">
+  <div class="container px-4">
+    <h1>Our Live <span>Initiatives</span></h1>
+    <p>Explore the structured framework initiatives, transparent resource targets, and developmental field programs running across our ecosystem segments.</p>
+  </div>
+</section>
+
+<!-- Main Programs Display Area -->
+<section class="causes-section">
+  <div class="container px-4">
+
+    <div class="text-center mb-2">
+      <span class="section-eyebrow">Active Priorities</span>
+      <h2 class="section-heading">Programs Needing Your Support</h2>
+    </div>
+
+    <!-- If your partial file is wired up, load it -->
+    {% if causes %}
+      {% include 'core/partials/causes_grid.html' with causes=causes title='All Causes' %}
+    {% else %}
+
+      <!-- Premium Design Studio Native Grid System Fallbacks -->
+      <div class="row g-4 justify-content-center">
+
+        <!-- Cause Item Box 1 -->
+        <div class="col-xl-4 col-md-6">
+          <div class="cause-card-wrapper">
+            <div class="cause-img-box">
+              <span class="cause-tag-badge">Education</span>
+              <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80" alt="Rural Education Initiative">
+            </div>
+            <div class="cause-card-content">
+              <h3>Next-Gen Digital Literacy Libraries</h3>
+              <p>Deploying responsive computing laboratories and foundational technical skill pipelines inside underserved regional training schools.</p>
+
+              <div class="metric-progress-container">
+                <div class="metric-label-row">
+                  <span>Raised: <strong>$14,250</strong></span>
+                  <span>Goal: $20,000</span>
+                </div>
+                <div class="progress-track-bar">
+                  <div class="progress-fill-bar" style="width: 71%;"></div>
+                </div>
+              </div>
+
+              <a href="#" class="btn-cause-action">
+                <span>View Details & Support</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cause Item Box 2 -->
+        <div class="col-xl-4 col-md-6">
+          <div class="cause-card-wrapper">
+            <div class="cause-img-box">
+              <span class="cause-tag-badge">Healthcare</span>
+              <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80" alt="Rural Health Infrastructure">
+            </div>
+            <div class="cause-card-content">
+              <h3>Mobile Medical & Diagnostic Clinics</h3>
+              <p>Routing optimized field trucks equipped with critical medical assessment units, generic pharmaceuticals, and certified remote nursing staff.</p>
+
+              <div class="metric-progress-container">
+                <div class="metric-label-row">
+                  <span>Raised: <strong>$38,900</strong></span>
+                  <span>Goal: $45,000</span>
+                </div>
+                <div class="progress-track-bar">
+                  <div class="progress-fill-bar" style="width: 86%;"></div>
+                </div>
+              </div>
+
+              <a href="#" class="btn-cause-action">
+                <span>View Details & Support</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cause Item Box 3 -->
+        <div class="col-xl-4 col-md-6">
+          <div class="cause-card-wrapper">
+            <div class="cause-img-box">
+              <span class="cause-tag-badge">Nutrition</span>
+              <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80" alt="Nutritional Security Framework">
+            </div>
+            <div class="cause-card-content">
+              <h3>Community Clean Water Filter Arrays</h3>
+              <p>Installing structural bio-sand filtering clusters directly to give family units consistent access to micro-biologically pure drinking resources.</p>
+
+              <div class="metric-progress-container">
+                <div class="metric-label-row">
+                  <span>Raised: <strong>$4,120</strong></span>
+                  <span>Goal: $10,000</span>
+                </div>
+                <div class="progress-track-bar">
+                  <div class="progress-fill-bar" style="width: 41%;"></div>
+                </div>
+              </div>
+
+              <a href="#" class="btn-cause-action">
+                <span>View Details & Support</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

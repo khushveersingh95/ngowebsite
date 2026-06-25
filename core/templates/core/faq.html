@@ -1,0 +1,336 @@
+{% extends 'core/base.html' %}
+{% block title %}FAQ | {{ site_settings.ngo_name }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Premium Studio Design Tokens */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius-md: 20px;
+    --spring-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* Minimalist Grid Pattern Hero Banner */
+  .faq-hero {
+    background: radial-gradient(circle at 0% 0%, rgba(26, 86, 219, 0.05) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 100% 100%, rgba(30, 64, 175, 0.06) 0%, rgba(255, 255, 255, 0) 40%),
+                #FFFFFF;
+    position: relative;
+    padding: 6.5rem 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+  .faq-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(26, 86, 219, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    pointer-events: none;
+  }
+  .faq-hero h1 {
+    font-size: 3.75rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--deep-ink);
+    margin-bottom: 1rem;
+  }
+  .faq-hero h1 span {
+    background: linear-gradient(135deg, #1E40AF 0%, var(--brand-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .faq-hero p {
+    font-size: 1.25rem;
+    color: var(--slate-text);
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Core Main Section Split Grid Packaging */
+  .faq-section {
+    padding: 6rem 0;
+  }
+
+  /* Left Side: Support Sticky Meta Canvas */
+  .support-meta-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-md);
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.03);
+    position: sticky;
+    top: 120px; /* Aligns comfortably with the floating header navbar */
+  }
+  .support-meta-card h3 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .support-meta-card p {
+    font-size: 1rem;
+    color: var(--slate-text);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  .btn-support-connect {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: var(--brand-blue);
+    color: #FFFFFF !important;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 12px;
+    text-decoration: none;
+    width: 100%;
+    box-shadow: 0 8px 20px -4px rgba(26, 86, 219, 0.25);
+    transition: var(--spring-transition);
+  }
+  .btn-support-connect:hover {
+    background-color: #1445B3;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -4px rgba(26, 86, 219, 0.4);
+  }
+
+  /* Right Side: Luxury Custom Micro-Animated Accordion Item Systems */
+  .custom-accordion-item {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: 14px !important;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.01);
+    transition: var(--spring-transition);
+  }
+  .custom-accordion-item:hover {
+    border-color: rgba(26, 86, 219, 0.2);
+    box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.03);
+  }
+
+  /* Accordion Header Button Settings */
+  .accordion-trigger-header {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--deep-ink);
+    gap: 1.25rem;
+    cursor: pointer;
+    transition: var(--spring-transition);
+  }
+  .accordion-trigger-header:focus {
+    outline: none;
+  }
+
+  /* Vector Interactive Rotational Indicators icons */
+  .accordion-chevron-icon {
+    color: var(--slate-text);
+    background-color: #F8FAFC;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border-light);
+    transition: var(--spring-transition);
+  }
+
+  /* Active expanded modifications class values */
+  .custom-accordion-item.expanded {
+    border-color: var(--brand-blue);
+    box-shadow: 0 12px 25px -8px rgba(26, 86, 219, 0.08);
+  }
+  .custom-accordion-item.expanded .accordion-trigger-header {
+    color: var(--brand-blue);
+  }
+  .custom-accordion-item.expanded .accordion-chevron-icon {
+    background-color: var(--brand-blue);
+    color: #FFFFFF;
+    border-color: var(--brand-blue);
+    transform: rotate(180deg);
+  }
+
+  /* Content Panel Drawer sliding layout states definitions */
+  .accordion-body-drawer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .accordion-body-content {
+    padding: 0 1.75rem 1.75rem 1.75rem;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--slate-text);
+    border-top: 1px solid transparent;
+  }
+  .custom-accordion-item.expanded .accordion-body-content {
+    border-color: rgba(226, 232, 240, 0.5);
+  }
+
+  @media (max-width: 991.98px) {
+    .faq-hero { padding: 4.5rem 0; }
+    .faq-hero h1 { font-size: 2.75rem; }
+    .faq-section { padding: 4.5rem 0; }
+    .support-meta-card { position: static; margin-bottom: 3.5rem; padding: 2rem; }
+    .accordion-trigger-header { padding: 1.25rem 1.5rem; font-size: 1.05rem; }
+    .accordion-body-content { padding: 0 1.5rem 1.5rem 1.5rem; }
+  }
+</style>
+
+<!-- Modern Grid Splashed Hero Header -->
+<section class="faq-hero">
+  <div class="container px-4">
+    <h1>Knowledge <span>Registry</span> Desk</h1>
+    <p>Find direct information regarding resource routing transparency, accountability audits, and operational methods.</p>
+  </div>
+</section>
+
+<!-- Core Split Content Workspace Layout Grid -->
+<section class="faq-section">
+  <div class="container px-4">
+    <div class="row g-4 lg-g-5 align-items-start">
+
+      <!-- Column Left: Help Desk Connection Card -->
+      <div class="col-lg-4">
+        <div class="support-meta-card">
+          <h3>Still Have Questions?</h3>
+          <p>If you cannot find specific telemetry metrics or administrative audit paths here, reach out directly to our core desk team.</p>
+          <a href="{% url 'contact' %}" class="btn-support-connect">
+            <span>Contact Support Desk</span>
+            <i class="bi bi-arrow-right-short" style="font-size: 1.2rem;"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Column Right: Custom Interactive Accordion Array -->
+      <div class="col-lg-8">
+
+        <!-- Render native conditional backend includes split if active -->
+        {% if faqs %}
+          {% include 'core/partials/faq_accordion.html' with faqs=faqs %}
+        {% else %}
+
+          <!-- Premium Design Studio Fallback Mock Accordions -->
+          <div class="custom-accordion-panel-group">
+
+            <!-- Accordion Element Block 1 -->
+            <div class="custom-accordion-item">
+              <button type="button" class="accordion-trigger-header">
+                <span>How can I track the exact distribution of my donated funds?</span>
+                <div class="accordion-chevron-icon"><i class="bi bi-chevron-down"></i></div>
+              </button>
+              <div class="accordion-body-drawer">
+                <div class="accordion-body-content">
+                  We enforce absolute transaction visibility. Every incoming contribution is mapped to its matching project node. You can view our verified financial statements, budget ledger updates, and operational audit reports directly inside our Governance slot on the About page.
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Element Block 2 -->
+            <div class="custom-accordion-item">
+              <button type="button" class="accordion-trigger-header">
+                <span>Are my financial contributions eligible for tax exemption?</span>
+                <div class="accordion-chevron-icon"><i class="bi bi-chevron-down"></i></div>
+              </button>
+              <div class="accordion-body-drawer">
+                <div class="accordion-body-content">
+                  Yes. As a fully registered, licensed non-profit organization, all qualifying donations receive official tax exemption certificates. Upon checkout verification or payment completion, a secure automated receipt containing our operational registration credentials will be delivered straight to your verified email address.
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Element Block 3 -->
+            <div class="custom-accordion-item">
+              <button type="button" class="accordion-trigger-header">
+                <span>How can I apply to become an active on-the-ground volunteer?</span>
+                <div class="accordion-chevron-icon"><i class="bi bi-chevron-down"></i></div>
+              </button>
+              <div class="accordion-body-drawer">
+                <div class="accordion-body-content">
+                  We are constantly looking for dedicated structural support. You can navigate directly to our Volunteer Node linked inside the site layout footer to submit your technical skill metrics, geographical availability window, and primary field interests. Our branch alignment team will follow up within 3 business days.
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Element Block 4 -->
+            <div class="custom-accordion-item">
+              <button type="button" class="accordion-trigger-header">
+                <span>What is the functional difference between Causes and Campaigns?</span>
+                <div class="accordion-chevron-icon"><i class="bi bi-chevron-down"></i></div>
+              </button>
+              <div class="accordion-body-drawer">
+                <div class="accordion-body-content">
+                  <strong>Causes</strong> represent our ongoing, permanent development pillars (such as digital literacy or rural medical care). <strong>Campaigns</strong> are time-bound, urgent disaster-response goals or specific seasonal projects that have defined financial targets and strict completion windows.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        {% endif %}
+
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+<!-- Append highly optimized sliding accordion height script to structural page slot block -->
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordionHeaders = document.querySelectorAll('.accordion-trigger-header');
+
+    accordionHeaders.forEach(header => {
+      header.addEventListener('click', function() {
+        const item = this.parentElement;
+        const drawer = this.nextElementSibling;
+        const isExpanded = item.classList.contains('expanded');
+
+        // Optional: Close all other open accordion panels in the group for a clean accordian flow
+        document.querySelectorAll('.custom-accordion-item').forEach(otherItem => {
+          if (otherItem !== item && otherItem.classList.contains('expanded')) {
+            otherItem.classList.remove('expanded');
+            otherItem.querySelector('.accordion-body-drawer').style.maxHeight = '0px';
+          }
+        });
+
+        // Toggle state parameters of the active element card item click
+        if (!isExpanded) {
+          item.classList.add('expanded');
+          // Calculate natural internal scrollHeight bound box dimensions for fluid CSS drawers transitions
+          drawer.style.maxHeight = drawer.scrollHeight + 'px';
+        } else {
+          item.classList.remove('expanded');
+          drawer.style.maxHeight = '0px';
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

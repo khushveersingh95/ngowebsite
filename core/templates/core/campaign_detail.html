@@ -1,0 +1,325 @@
+{% extends 'core/base.html' %}
+{% block title %}{{ campaign.title }} | {{ site_settings.ngo_name }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Premium Design Studio Variable Tokens */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --emerald-green: #10B981;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius-md: 20px;
+    --curve-radius-sm: 12px;
+    --spring-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* -----------------------------------------
+     1. IMMERSIVE NARRATIVE DETAIL HERO BANNER
+  ----------------------------------------- */
+  .campaign-detail-hero {
+    position: relative;
+    padding: 7.5rem 0;
+    {% if campaign.banner_image %}
+      background-image: url('{{ campaign.banner_image.url }}');
+    {% else %}
+      background-image: url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1600&q=80');
+    {% endif %}
+    background-size: cover;
+    background-position: center;
+    color: #FFFFFF;
+    overflow: hidden;
+  }
+
+  /* Rich Dual Gradient Overlay to maintain high text legibility */
+  .campaign-detail-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.4) 60%, rgba(15, 23, 42, 0.2) 100%);
+    z-index: 1;
+  }
+
+  .campaign-detail-hero .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Status Tag Accent Pill Inside Hero */
+  .hero-status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1.5rem;
+  }
+  .hero-status-tag::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    background-color: var(--emerald-green);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.4);
+  }
+
+  .campaign-detail-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    max-width: 850px;
+  }
+
+  /* -----------------------------------------
+     2. ASYMMETRICAL WORKSPACE ROW SPLIT
+  ----------------------------------------- */
+  .detail-layout-section {
+    padding: 6rem 0;
+  }
+
+  /* Left Column: Deep Immersive Editorial Text */
+  .editorial-content-canvas {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-md);
+    padding: 3.5rem;
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.02);
+  }
+  .editorial-content-canvas h2,
+  .editorial-content-canvas h3 {
+    color: var(--deep-ink);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .editorial-content-canvas p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--slate-text);
+    margin-bottom: 1.75rem;
+  }
+
+  /* Right Column: Sticky Performance Progress Gauge Card */
+  .sticky-progress-panel {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-md);
+    padding: 2.5rem;
+    box-shadow: 0 15px 35px -10px rgba(15, 23, 42, 0.04);
+    position: sticky;
+    top: 120px; /* Aligns smoothly with floating navbar layout */
+    transition: var(--spring-transition);
+  }
+  .sticky-progress-panel:hover {
+    box-shadow: 0 25px 50px -15px rgba(26, 86, 219, 0.08);
+    border-color: rgba(26, 86, 219, 0.12);
+  }
+
+  .sticky-progress-panel h4 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Custom Clean Progress Bar System */
+  .progress-track-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #E2E8F0;
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .progress-fill-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand-blue) 0%, #3B82F6 100%);
+    border-radius: 100px;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Data Row Value Grid Matrices */
+  .fiscal-metrics-row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+  .fiscal-metrics-row:last-of-type {
+    border-bottom: none;
+    margin-bottom: 2rem;
+    padding-bottom: 0;
+  }
+  .metric-text-block {
+    display: flex;
+    flex-direction: column;
+  }
+  .metric-text-block span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--slate-text);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+  .metric-text-block strong {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+  }
+  .metric-text-block strong.highlight-green {
+    color: var(--emerald-green);
+  }
+
+  /* Real-Time Linear Timeline Indicator Row */
+  .timeline-meta-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background-color: #F8FAFC;
+    border: 1px solid var(--border-light);
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    font-size: 0.92rem;
+    color: var(--slate-text);
+    line-height: 1.5;
+  }
+  .timeline-meta-box i {
+    color: var(--brand-blue);
+    font-size: 1.1rem;
+    margin-top: 0.1rem;
+  }
+
+  /* Premium High-Contrast Direct Conversion Action Trigger Button */
+  .btn-premium-checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: var(--brand-blue);
+    color: #FFFFFF !important;
+    border: none;
+    padding: 1.1rem 2rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: 14px;
+    width: 100%;
+    text-decoration: none;
+    box-shadow: 0 10px 25px -5px rgba(26, 86, 219, 0.3);
+    transition: var(--spring-transition);
+  }
+  .btn-premium-checkout:hover {
+    background-color: #1445B3;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(26, 86, 219, 0.42);
+  }
+  .btn-premium-checkout:active {
+    transform: translateY(0);
+  }
+
+  /* Responsiveness Overrides */
+  @media (max-width: 991.98px) {
+    .campaign-detail-hero { padding: 5rem 0; }
+    .campaign-detail-hero h1 { font-size: 2.5rem; }
+    .detail-layout-section { padding: 4.5rem 0; }
+    .editorial-content-canvas, .sticky-progress-panel { padding: 2.5rem 1.5rem; }
+    .sticky-progress-panel { position: static; margin-top: 3rem; }
+  }
+</style>
+
+<!-- 1. CREATIVE IMMERSIVE NARRATIVE DETAIL HERO -->
+<section class="campaign-detail-hero">
+  <div class="container px-4">
+    <div class="hero-status-tag">
+      <span>{{ campaign.status|default:"Active" }} Deployment</span>
+    </div>
+    <h1>{{ campaign.title }}</h1>
+  </div>
+</section>
+
+<!-- 2. CORE WORKSPACE OPTIMIZED ASYMMETRIC GRID SPLIT -->
+<section class="detail-layout-section">
+  <div class="container px-4">
+    <div class="row g-4 lg-g-5 align-items-start">
+
+      <!-- Left Canvas: Deep Editorial Markdown Text Blocks -->
+      <div class="col-lg-8">
+        <div class="editorial-content-canvas">
+          <div class="content-body">
+            {{ campaign.description|linebreaks }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Canvas: Sticky Performance Analytics Tracking Panel -->
+      <div class="col-lg-4">
+        <div class="sticky-progress-panel">
+          <h4>Campaign Parameters</h4>
+
+          <!-- Unified Funding Metrics Array Grid -->
+          <div class="fiscal-metrics-row">
+            <div class="metric-text-block">
+              <span>Raised So Far</span>
+              <strong class="highlight-green">INR {{ campaign.raised_amount }}</strong>
+            </div>
+            <div class="metric-text-block text-end">
+              <span>Target Goal</span>
+              <strong>INR {{ campaign.goal_amount }}</strong>
+            </div>
+          </div>
+
+          <div class="fiscal-metrics-row">
+            <div class="metric-text-block">
+              <span>Funding Ratio</span>
+              <strong>{{ campaign.progress_percent }}%</strong>
+            </div>
+          </div>
+
+          <!-- Linear Target Progress Gauge -->
+          <div class="progress-track-bar">
+            <div class="progress-fill-bar" style="width: {{ campaign.progress_percent }}%"></div>
+          </div>
+
+          <!-- Live Operations Timeline Counter Box -->
+          <div class="timeline-meta-box">
+            <i class="bi bi-calendar-event-fill"></i>
+            <div>
+              <strong>Timeline Framework</strong><br>
+              {{ campaign.start_date }}{% if campaign.end_date %} to {{ campaign.end_date }}{% endif %}
+            </div>
+          </div>
+
+          <!-- High-Contrast Direct Checkout Call to Action Link -->
+          <a href="{% url 'donate' %}" class="btn-premium-checkout">
+            <i class="bi bi-heart-fill" style="font-size: 0.95rem;"></i>
+            <span>Support This Priority</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

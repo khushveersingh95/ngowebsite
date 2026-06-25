@@ -1,0 +1,384 @@
+{% extends 'core/base.html' %}
+{% block title %}Donate | {{ site_settings.ngo_name }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Premium Design Tokens */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --emerald-green: #10B981;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius-md: 20px;
+    --curve-radius-sm: 12px;
+    --spring-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* Sophisticated Minimal Mesh Hero Banner */
+  .donate-hero {
+    background: radial-gradient(circle at 0% 100%, rgba(26, 86, 219, 0.05) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0) 40%),
+                #FFFFFF;
+    position: relative;
+    padding: 6.5rem 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+  .donate-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(26, 86, 219, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    pointer-events: none;
+  }
+  .donate-hero h1 {
+    font-size: 3.75rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--deep-ink);
+    margin-bottom: 1rem;
+  }
+  .donate-hero h1 span {
+    background: linear-gradient(135deg, #1E40AF 0%, var(--brand-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .donate-hero p {
+    font-size: 1.25rem;
+    color: var(--slate-text);
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Main Dynamic Section Layout Grid */
+  .donate-section {
+    padding: 6rem 0;
+  }
+
+  /* Luxury White Payment Workspace Form Shell */
+  .donate-form-canvas {
+    background: #FFFFFF;
+    padding: 3.5rem;
+    border-radius: var(--curve-radius-md);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.04);
+    position: relative;
+    transition: var(--spring-transition);
+  }
+  .donate-form-canvas:hover {
+    box-shadow: 0 30px 60px -20px rgba(26, 86, 219, 0.08);
+  }
+
+  /* Form Fields Styling (Django `as_p` Overrides) */
+  .donate-form-canvas form p {
+    margin-bottom: 1.75rem;
+  }
+  .donate-form-canvas form label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--deep-ink);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .donate-form-canvas form input,
+  .donate-form-canvas form textarea,
+  .donate-form-canvas form select {
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    border: 1.5px solid var(--border-light);
+    border-radius: 12px;
+    color: var(--deep-ink);
+    background-color: #F8FAFC;
+    font-size: 1rem;
+    transition: var(--spring-transition);
+  }
+  .donate-form-canvas form input:focus,
+  .donate-form-canvas form textarea:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(26, 86, 219, 0.08);
+  }
+
+  /* High-Design Fast Amount Selector Cards Component */
+  .fast-amount-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  .amount-pill-card {
+    background-color: #F8FAFC;
+    border: 1.5px solid var(--border-light);
+    border-radius: 10px;
+    padding: 0.85rem;
+    text-align: center;
+    font-weight: 700;
+    color: var(--deep-ink);
+    cursor: pointer;
+    transition: var(--spring-transition);
+  }
+  .amount-pill-card:hover {
+    border-color: var(--brand-blue);
+    color: var(--brand-blue);
+    background-color: rgba(26, 86, 219, 0.02);
+  }
+  .amount-pill-card.selected {
+    background-color: var(--brand-blue);
+    border-color: var(--brand-blue);
+    color: #FFFFFF;
+    box-shadow: 0 8px 16px -4px rgba(26, 86, 219, 0.3);
+  }
+
+  /* Tactile Action Submit Trigger Button Component */
+  .btn-secure-checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: var(--brand-blue);
+    color: #FFFFFF;
+    border: none;
+    padding: 1.1rem 2.5rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: 0 10px 25px -5px rgba(26, 86, 219, 0.3);
+    transition: var(--spring-transition);
+    cursor: pointer;
+  }
+  .btn-secure-checkout:hover:not([disabled]) {
+    background-color: var(--brand-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(26, 86, 219, 0.42);
+    color: #FFFFFF;
+  }
+  .btn-secure-checkout:disabled {
+    background-color: #94A3B8;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  /* Elegant Trust Assurance Sidebar Info Block */
+  .trust-sidebar-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-md);
+    padding: 3rem 2.5rem;
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.02);
+  }
+  .trust-sidebar-card h4 {
+    color: var(--deep-ink);
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .trust-sidebar-card p {
+    color: var(--slate-text);
+    font-size: 1.02rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  /* Minimalist Bullet Rows Vector Icons Rows Layout */
+  .security-feature-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.25rem;
+    background-color: #F8FAFC;
+    border-radius: var(--curve-radius-sm);
+    border: 1px solid var(--border-light);
+  }
+  .security-feature-row i {
+    font-size: 1.25rem;
+    color: var(--emerald-green);
+    background-color: rgba(16, 185, 129, 0.08);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .security-feature-row span {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--deep-ink);
+  }
+
+  /* Environmental Config Error Warn Cards */
+  .config-alert-card {
+    background-color: rgba(239, 68, 68, 0.04);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    color: #DC2626;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 991.98px) {
+    .donate-hero { padding: 4.5rem 0; }
+    .donate-hero h1 { font-size: 2.75rem; }
+    .donate-section { padding: 4.5rem 0; }
+    .donate-form-canvas, .trust-sidebar-card { padding: 2.5rem 2rem; }
+    .fast-amount-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<!-- 1. SOPIHISTICATED HERO AREA -->
+<section class="donate-hero">
+  <div class="container px-4">
+    <h1>Empower <span>Transformation</span></h1>
+    <p>Fuel direct community deployments, technical resource distribution arrays, and transparent operational pipelines safely via Razorpay.</p>
+  </div>
+</section>
+
+<!-- 2. CORE WORKSPACE OPERATION PANEL GRID -->
+<section class="donate-section">
+  <div class="container px-4">
+    <div class="row g-4 lg-g-5 align-items-stretch">
+
+      <!-- Column Left: Interactive Gateway Module Wrapper -->
+      <div class="col-lg-7">
+        <div class="donate-form-canvas">
+
+          <!-- Designer Quick Amount Pick Grid Array Component -->
+          <label class="d-block fw-bold text-uppercase small tracking-wide mb-2" style="color: var(--deep-ink);">Select Donation Value</label>
+          <div class="fast-amount-row">
+            <div class="amount-pill-card" data-val="500">₹500</div>
+            <div class="amount-pill-card" data-val="1000">₹1,000</div>
+            <div class="amount-pill-card" data-val="2500">₹2,500</div>
+            <div class="amount-pill-card selected" data-val="5000">₹5,000</div>
+          </div>
+
+          <!-- Native Django Backend Dynamic Form Slot -->
+          <form id="donation-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button class="btn-secure-checkout mt-4" type="submit" {% if not razorpay_key %}disabled{% endif %}>
+              <i class="bi bi-shield-lock-fill"></i>
+              <span>Initialize Secure Payment</span>
+            </button>
+
+            {% if not razorpay_key %}
+              <div class="config-alert-card">
+                <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.1rem;"></i>
+                <span>Razorpay credentials missing. Configure operational keys within host environment keys ledger.</span>
+              </div>
+            {% endif %}
+          </form>
+
+          <!-- Hidden Verification Data Sink Routing Forms -->
+          <form method="post" action="{% url 'verify_payment' %}" id="payment-verify-form" class="d-none">
+            {% csrf_token %}
+            <input type="hidden" name="donation_id" id="verify-donation-id">
+            <input type="hidden" name="razorpay_payment_id" id="verify-payment-id">
+            <input type="hidden" name="razorpay_order_id" id="verify-order-id">
+            <input type="hidden" name="razorpay_signature" id="verify-signature">
+          </form>
+
+        </div>
+      </div>
+
+      <!-- Column Right: Compliance / Trust Verification Board -->
+      <div class="col-lg-5">
+        <div class="trust-sidebar-card d-flex flex-column justify-content-between h-100">
+          <div>
+            <h4>Where Your Allocation Travels</h4>
+            <p>We enforce strict resource tracking metrics. Your contribution directly funds regional healthcare setups, digital libraries, and immediate nutritional crisis operations.</p>
+
+            <div class="security-feature-row">
+              <i class="bi bi-check2-circle"></i>
+              <span>256-bit SSL Razorpay Secure Token</span>
+            </div>
+            <div class="security-feature-row">
+              <i class="bi bi-file-earmark-check-fill"></i>
+              <span>Automated Fiscal Tax Receipt Email</span>
+            </div>
+            <div class="security-feature-row">
+              <i class="bi bi-database-fill-check"></i>
+              <span>Persistent Audited Tracking Matrix Reference ID</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- 3. CONFIGURATION METADATA BOUND OBJECTS & INPUT RE-BINDERS SCRIPTS -->
+<script>
+  window.donationConfig = {
+    createOrderUrl: "{% url 'create_order' %}",
+    csrfToken: "{{ csrf_token }}",
+    ngoName: "{{ site_settings.ngo_name|default:'Helping Hands NGO'|escapejs }}"
+  };
+
+  // Modern Amount Matrix Component Interactive Sync Handlers
+  document.addEventListener('DOMContentLoaded', function() {
+    const amountCards = document.querySelectorAll('.amount-pill-card');
+
+    // Attempt automatic discovery mapping to Django form numeric input fields
+    // Looks for standard naming conventions: inputs with type number, or names containing amount/value
+    const amountField = document.querySelector('.donate-form-canvas form input[type="number"]') ||
+                        document.querySelector('.donate-form-canvas form input[name*="amount"]');
+
+    if (amountField) {
+      // Synchronize default selection value matrix parameters
+      const defaultSelected = document.querySelector('.amount-pill-card.selected');
+      if (defaultSelected) {
+        amountField.value = defaultSelected.getAttribute('data-val');
+      }
+
+      amountCards.forEach(card => {
+        card.addEventListener('click', function() {
+          amountCards.forEach(c => c.classList.remove('selected'));
+          this.classList.add('selected');
+
+          // Inject selected pill data parameter values straight to django view input fields
+          amountField.value = this.getAttribute('data-val');
+        });
+      });
+
+      // Clear layout visual card highlights if the client overrides values manually directly into input field
+      amountField.addEventListener('input', function() {
+        amountCards.forEach(c => {
+          if (c.getAttribute('data-val') === this.value) {
+            c.classList.add('selected');
+          } else {
+            c.classList.remove('selected');
+          }
+        });
+      });
+    }
+  });
+</script>
+{% endblock %}

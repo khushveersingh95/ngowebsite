@@ -1,0 +1,337 @@
+{% extends "admin/index.html" %}
+{% load admin_stats %}
+
+{% block content %}
+{% dashboard_stats as stats %}
+<style>
+  /* Advanced Colorful Dashboard Variable Architecture */
+  :root {
+    --deep-ink: #0F172A;
+    --slate-text: #64748B;
+    --bg-surface: #FFFFFF;
+    --canvas-bg: #F8FAFC;
+    --border-light: #E2E8F0;
+    --curve-radius-lg: 16px;
+    --curve-radius-sm: 8px;
+    --spring-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Semantic Vibrancy System Colors */
+    --metric-blue: #1A56DB;
+    --metric-green: #10B981;
+    --metric-purple: #8B5CF6;
+    --metric-amber: #F59E0B;
+  }
+
+  /* Structural Core Dashboard Frame */
+  .studio-vibrant-dashboard {
+    margin-bottom: 3.5rem;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* -----------------------------------------
+     1. HIGH-DESIGN VIBRANT ANALYTICS GRID
+  ----------------------------------------- */
+  .analytics-matrix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  /* Luxury White Admin Metric Card Frame */
+  .matrix-metric-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-lg);
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.01), 0 2px 4px -1px rgba(15, 23, 42, 0.01);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 140px;
+    transition: var(--spring-transition);
+  }
+
+  .matrix-metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.06), 0 10px 10px -5px rgba(15, 23, 42, 0.03);
+  }
+
+  /* Dynamic Custom Top-Border Color Tags per Card Element */
+  .matrix-metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background-color: var(--border-light);
+  }
+  .card-variant-blue::before { background-color: var(--metric-blue); }
+  .card-variant-green::before { background-color: var(--metric-green); }
+  .card-variant-purple::before { background-color: var(--metric-purple); }
+  .card-variant-amber::before { background-color: var(--metric-amber); }
+
+  /* Metric Content Layout Elements styling */
+  .matrix-metric-card span {
+    display: block;
+    color: var(--slate-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+  .matrix-metric-card strong {
+    font-size: 2.25rem;
+    font-weight: 850;
+    color: var(--deep-ink);
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    z-index: 2;
+  }
+
+  /* Micro-Icon Layout Backplates Elements styling */
+  .card-header-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
+  .metric-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+  .card-variant-blue .metric-icon-wrapper { background-color: rgba(26, 86, 219, 0.08); color: var(--metric-blue); }
+  .card-variant-green .metric-icon-wrapper { background-color: rgba(16, 185, 129, 0.08); color: var(--metric-green); }
+  .card-variant-purple .metric-icon-wrapper { background-color: rgba(139, 92, 246, 0.08); color: var(--metric-purple); }
+  .card-variant-amber .metric-icon-wrapper { background-color: rgba(245, 158, 11, 0.08); color: var(--metric-amber); }
+
+  /* -----------------------------------------
+     2. DATA STREAMS LEDGERS LAYER
+  ----------------------------------------- */
+  .ledger-split-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .ledger-card-wrapper {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-lg);
+    padding: 2rem;
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.02);
+  }
+
+  .ledger-card-wrapper h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--deep-ink);
+    letter-spacing: -0.02em;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ledger-card-wrapper h2 span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    background-color: #EFF6FF;
+    color: var(--metric-blue);
+    padding: 0.3rem 0.8rem;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid rgba(26, 86, 219, 0.1);
+  }
+
+  /* High-Contrast Data Layout Tables */
+  .studio-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+  }
+  .studio-data-table th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--slate-text);
+    letter-spacing: 0.06em;
+    padding: 0.85rem 1rem;
+    background-color: var(--canvas-bg);
+    border-bottom: 1px solid var(--border-light);
+    text-align: left;
+  }
+  .studio-data-table th:first-child { border-radius: var(--curve-radius-sm) 0 0 var(--curve-radius-sm); }
+  .studio-data-table th:last-child { border-radius: 0 var(--curve-radius-sm) var(--curve-radius-sm) 0; }
+
+  .studio-data-table td {
+    padding: 1rem;
+    font-size: 0.95rem;
+    color: var(--deep-ink);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.4);
+    vertical-align: middle;
+  }
+  .studio-data-table tr:last-child td { border-bottom: none; }
+
+  /* Redesigned High-Vibrancy Badge Pills */
+  .admin-badge-capsule {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .badge-paid {
+    background-color: #D1FAE5;
+    color: #065F46;
+  }
+  .badge-awaiting {
+    background-color: #FEF3C7;
+    color: #92400E;
+  }
+  .badge-location {
+    background-color: #E0E7FF;
+    color: #3730A3;
+  }
+
+  .primary-data-cell { font-weight: 600; color: var(--deep-ink); }
+  .secondary-data-cell { font-weight: 700; color: var(--deep-ink); }
+
+  @media (max-width: 991.98px) {
+    .ledger-split-row { grid-template-columns: 1fr; }
+    .ledger-card-wrapper { padding: 1.5rem; }
+  }
+</style>
+
+<div class="studio-vibrant-dashboard">
+
+  <!-- 1. HIGH-DESIGN MULTICOLOR METRIC PANELS -->
+  <div class="analytics-matrix-grid">
+
+    <!-- Box 1: Financial Cache Node -->
+    <div class="matrix-metric-card card-variant-blue">
+      <div class="card-header-action-row">
+        <span>Total Donations</span>
+        <div class="metric-icon-wrapper"><i class="bi bi-wallet2"></i></div>
+      </div>
+      <strong>₹{{ stats.total_donations|default:"0" }}</strong>
+    </div>
+
+    <!-- Box 2: Team Personnel Cache Node -->
+    <div class="matrix-metric-card card-variant-green">
+      <div class="card-header-action-row">
+        <span>Total Volunteers</span>
+        <div class="metric-icon-wrapper"><i class="bi bi-people-fill"></i></div>
+      </div>
+      <strong>{{ stats.total_volunteers|default:"0" }}</strong>
+    </div>
+
+    <!-- Box 3: Communication Queue Node -->
+    <div class="matrix-metric-card card-variant-purple">
+      <div class="card-header-action-row">
+        <span>Total Queries</span>
+        <div class="metric-icon-wrapper"><i class="bi bi-chat-square-text-fill"></i></div>
+      </div>
+      <strong>{{ stats.total_queries|default:"0" }}</strong>
+    </div>
+
+    <!-- Box 4: Active Projects Engine -->
+    <div class="matrix-metric-card card-variant-amber">
+      <div class="card-header-action-row">
+        <span>Active Campaigns</span>
+        <div class="metric-icon-wrapper"><i class="bi bi-lightning-charge-fill"></i></div>
+      </div>
+      <strong>{{ stats.active_campaigns|default:"0" }}</strong>
+    </div>
+
+  </div>
+
+  <!-- 2. LIVE RUNNING DATA LEDGERS -->
+  <div class="ledger-split-row">
+
+    <!-- Left Table Frame: Cashflows Stream -->
+    <div class="ledger-card-wrapper">
+      <h2>Recent Inbound Cashflows <span>Live Feed</span></h2>
+      <div class="table-responsive">
+        <table class="studio-data-table">
+          <thead>
+            <tr>
+              <th>Entity Source</th>
+              <th>Tranche Value</th>
+              <th>Status Ledger</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for donation in stats.recent_donations %}
+              <tr>
+                <td class="primary-data-cell">{{ donation.donor_name }}</td>
+                <td class="secondary-data-cell text-success">₹{{ donation.amount }}</td>
+                <td>
+                  <span class="admin-badge-capsule {% if donation.status|lower == 'success' or donation.status|lower == 'paid' %}badge-paid{% else %}badge-awaiting{% endif %}">
+                    <i class="bi {% if donation.status|lower == 'success' or donation.status|lower == 'paid' %}bi-check-circle-fill{% else %}bi-clock-history{% endif %}"></i>
+                    {{ donation.status }}
+                  </span>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="3" class="text-center text-muted py-4 font-monospace small">No financial transaction telemetry tracked in this sync.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Table Frame: Staff Tracking Stream -->
+    <div class="ledger-card-wrapper">
+      <h2>On-the-Ground Personnel Registry <span>New Syncs</span></h2>
+      <div class="table-responsive">
+        <table class="studio-data-table">
+          <thead>
+            <tr>
+              <th>Personnel Identity</th>
+              <th>Assigned Allocation Node</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for volunteer in stats.recent_volunteers %}
+              <tr>
+                <td class="primary-data-cell">{{ volunteer.full_name }}</td>
+                <td>
+                  <span class="admin-badge-capsule badge-location">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    {{ volunteer.city|default:"Active Grid Node" }}
+                  </span>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="2" class="text-center text-muted py-4 font-monospace small">No new staff configurations detected inside active block.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Fall back securely onto baseline core Django admin configurations layout parameters below -->
+{{ block.super }}
+{% endblock %}

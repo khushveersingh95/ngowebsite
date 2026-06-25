@@ -1,0 +1,280 @@
+{% extends 'core/base.html' %}
+{% block title %}Volunteer | {{ site_settings.ngo_name }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Premium Design Studio Tokens */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius-md: 20px;
+    --curve-radius-sm: 12px;
+    --spring-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* Sophisticated Mesh Hero Banner */
+  .volunteer-hero {
+    background: radial-gradient(circle at 0% 100%, rgba(26, 86, 219, 0.05) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 100% 0%, rgba(30, 64, 175, 0.08) 0%, rgba(255, 255, 255, 0) 40%),
+                #FFFFFF;
+    position: relative;
+    padding: 6.5rem 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+  .volunteer-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(26, 86, 219, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    pointer-events: none;
+  }
+  .volunteer-hero h1 {
+    font-size: 3.75rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--deep-ink);
+    margin-bottom: 1rem;
+  }
+  .volunteer-hero h1 span {
+    background: linear-gradient(135deg, #1E40AF 0%, var(--brand-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .volunteer-hero p {
+    font-size: 1.25rem;
+    color: var(--slate-text);
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Main Section Grid Padding */
+  .volunteer-section {
+    padding: 6rem 0;
+  }
+
+  /* Left Side: Onboarding Requirements Panel */
+  .onboarding-info-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--curve-radius-md);
+    padding: 3rem 2.5rem;
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.02);
+    position: sticky;
+    top: 120px; /* Aligns smoothly with floating capsule header navbar */
+  }
+  .onboarding-info-card h4 {
+    color: var(--deep-ink);
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .onboarding-info-card p {
+    color: var(--slate-text);
+    font-size: 1.02rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  /* Vector Row Feature Checkmarks */
+  .onboarding-feature-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .onboarding-feature-row i {
+    font-size: 1.1rem;
+    color: var(--brand-blue);
+    background-color: rgba(26, 86, 219, 0.06);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .onboarding-feature-text strong {
+    display: block;
+    color: var(--deep-ink);
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+  }
+  .onboarding-feature-text span {
+    font-size: 0.92rem;
+    color: var(--slate-text);
+    line-height: 1.5;
+    display: block;
+  }
+
+  /* Right Side: Luxury White Form Canvas */
+  .form-canvas-shell {
+    background: #FFFFFF;
+    padding: 3.5rem;
+    border-radius: var(--curve-radius-md);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.04);
+    transition: var(--spring-transition);
+  }
+  .form-canvas-shell:hover {
+    box-shadow: 0 30px 60px -20px rgba(26, 86, 219, 0.08);
+  }
+
+  /* Form Fields Dynamic Styling (Django `as_p` Overrides) */
+  .form-canvas-shell form p {
+    margin-bottom: 1.75rem;
+  }
+  .form-canvas-shell form label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--deep-ink);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .form-canvas-shell form input,
+  .form-canvas-shell form textarea,
+  .form-canvas-shell form select {
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    border: 1.5px solid var(--border-light);
+    border-radius: 12px;
+    color: var(--deep-ink);
+    background-color: #F8FAFC;
+    font-size: 1rem;
+    transition: var(--spring-transition);
+  }
+  .form-canvas-shell form input:focus,
+  .form-canvas-shell form textarea:focus,
+  .form-canvas-shell form select:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(26, 86, 219, 0.08);
+  }
+
+  /* Custom Checkbox/Radio specific inline normalization if rendered by Django */
+  .form-canvas-shell form input[type="checkbox"],
+  .form-canvas-shell form input[type="radio"] {
+    width: auto;
+    margin-right: 0.5rem;
+    display: inline-block;
+  }
+
+  /* Tactile Action Submit Button */
+  .btn-premium-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: var(--brand-blue);
+    color: #FFFFFF;
+    border: none;
+    padding: 1.1rem 2.5rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: 0 10px 25px -5px rgba(26, 86, 219, 0.3);
+    transition: var(--spring-transition);
+    cursor: pointer;
+  }
+  .btn-premium-submit:hover {
+    background-color: #1445B3;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(26, 86, 219, 0.42);
+    color: #FFFFFF;
+  }
+  .btn-premium-submit:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 991.98px) {
+    .volunteer-hero { padding: 4.5rem 0; }
+    .volunteer-hero h1 { font-size: 2.75rem; }
+    .volunteer-section { padding: 4.5rem 0; }
+    .form-canvas-shell, .onboarding-info-card { padding: 2.5rem 2rem; }
+    .onboarding-info-card { position: static; margin-bottom: 2.5rem; }
+  }
+</style>
+
+<!-- 1. HIGH-DESIGN HERO BANNER -->
+<section class="volunteer-hero">
+  <div class="container px-4">
+    <h1>Join Our <span>Mission Grid</span></h1>
+    <p>Deploy your unique professional competencies, allocation windows, and regional dedication onto our active social development tracks.</p>
+  </div>
+</section>
+
+<!-- 2. SYSTEM ONBOARDING FORM WORKSPACE GRID -->
+<section class="volunteer-section">
+  <div class="container px-4">
+    <div class="row g-4 lg-g-5 align-items-start">
+
+      <!-- Column Left: Strategic Alignment Value Block -->
+      <div class="col-lg-5">
+        <div class="onboarding-info-card">
+          <h4>Why Step Inside Our Grid?</h4>
+          <p>We do not manage volunteers speculatively. We pair your exact skills (whether analytical, logistics management, medical, or administrative) straight to corresponding project priorities.</p>
+
+          <div class="onboarding-feature-row">
+            <i class="bi bi-diagram-3-fill"></i>
+            <div class="onboarding-feature-text">
+              <strong>Skill-to-Objective Mapping</strong>
+              <span>Work directly on implementations matched precisely to your technical or physical experience bounds.</span>
+            </div>
+          </div>
+
+          <div class="onboarding-feature-row">
+            <i class="bi bi-clock-history"></i>
+            <div class="onboarding-feature-text">
+              <strong>Flexible Time Allocations</strong>
+              <span>Choose your engagement models—ranging from weekend support tranches to deep field deployment frameworks.</span>
+            </div>
+          </div>
+
+          <div class="onboarding-feature-row">
+            <i class="bi bi-award-fill"></i>
+            <div class="onboarding-feature-text">
+              <strong>Accountability & Recognition</strong>
+              <span>Receive verified program completion logging records and official institutional service credential validation.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column Right: Interactive Application Form Shell -->
+      <div class="col-lg-7">
+        <div class="form-canvas-shell">
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button class="btn-premium-submit mt-3" type="submit">
+              <span>Submit Verified Application</span>
+              <i class="bi bi-arrow-right-short" style="font-size: 1.2rem;"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,8 @@
+Django==5.2.4
+python-dotenv==1.1.1
+razorpay==1.4.2
+Pillow==11.3.0
+reportlab==4.4.2
+psycopg[binary]==3.2.9
+gunicorn==23.0.0
+whitenoise==6.9.0

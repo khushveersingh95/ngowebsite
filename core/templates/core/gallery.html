@@ -1,0 +1,392 @@
+{% extends 'core/base.html' %}
+{% block title %}Gallery | {{ site_settings.ngo_name }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Premium Design Tokens */
+  :root {
+    --brand-blue: #1A56DB;
+    --brand-blue-rgb: 26, 86, 219;
+    --deep-ink: #0F172A;
+    --slate-text: #475569;
+    --canvas-bg: #FAFAFB;
+    --border-light: rgba(226, 232, 240, 0.8);
+    --curve-radius-md: 20px;
+    --spring-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background-color: var(--canvas-bg);
+  }
+
+  /* Minimalist Decorative Hero Splash */
+  .gallery-hero {
+    background: radial-gradient(circle at 100% 0%, rgba(26, 86, 219, 0.06) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 0% 100%, rgba(30, 64, 175, 0.08) 0%, rgba(255, 255, 255, 0) 40%),
+                #FFFFFF;
+    position: relative;
+    padding: 6.5rem 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+  .gallery-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(26, 86, 219, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+    pointer-events: none;
+  }
+  .gallery-hero h1 {
+    font-size: 3.75rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--deep-ink);
+    margin-bottom: 1rem;
+  }
+  .gallery-hero h1 span {
+    background: linear-gradient(135deg, #1E40AF 0%, var(--brand-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .gallery-hero p {
+    font-size: 1.25rem;
+    color: var(--slate-text);
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Workspaces Main Padding Layout */
+  .gallery-section {
+    padding: 5rem 0 7rem 0;
+  }
+
+  /* Redesigned Premium Segment Filtering Bars */
+  .filter-bar-capsule {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #FFFFFF;
+    padding: 0.6rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+    width: max-content;
+    max-width: 100%;
+    margin: 0 auto 4rem auto;
+  }
+
+  .btn-filter-pill {
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 0.55rem 1.5rem;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: var(--spring-transition);
+    border: none;
+  }
+  .filter-active {
+    background-color: var(--brand-blue) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 8px 16px -4px rgba(26, 86, 219, 0.3);
+  }
+  .filter-inactive {
+    background-color: transparent;
+    color: var(--slate-text);
+  }
+  .filter-inactive:hover {
+    color: var(--brand-blue);
+    background-color: rgba(26, 86, 219, 0.05);
+  }
+
+  /* Modern Responsive Controlled Media Grid Grid Layout */
+  .gallery-grid-system {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.75rem;
+  }
+
+  /* Luxury Interactive Media Containers Layout */
+  .premium-gallery-card {
+    position: relative;
+    background-color: #FFFFFF;
+    border-radius: var(--curve-radius-md);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.03);
+    cursor: pointer;
+    display: block;
+    transition: var(--spring-transition);
+  }
+
+  .premium-gallery-card img,
+  .video-canvas-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--spring-transition);
+  }
+
+  /* Video Specifc Layout Components */
+  .video-canvas-placeholder {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .play-icon-hub {
+    color: #FFFFFF;
+    background: rgba(26, 86, 219, 0.9);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    box-shadow: 0 8px 24px rgba(26, 86, 219, 0.4);
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    z-index: 2;
+    transition: var(--spring-transition);
+  }
+  .premium-gallery-card:hover .play-icon-hub {
+    transform: scale(1.1);
+    background-color: var(--brand-blue);
+    box-shadow: 0 12px 30px rgba(26, 86, 219, 0.6);
+  }
+
+  /* Hover Overlay Text Gradients Sheets styling */
+  .media-meta-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 1.75rem;
+    opacity: 0;
+    z-index: 3;
+    transition: var(--spring-transition);
+  }
+  .media-meta-overlay span {
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    transform: translateY(10px);
+    transition: var(--spring-transition);
+  }
+
+  /* Trigger Hover Dynamics */
+  .premium-gallery-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 40px -15px rgba(15, 23, 42, 0.1);
+  }
+  .premium-gallery-card:hover img {
+    transform: scale(1.04);
+  }
+  .premium-gallery-card:hover .media-meta-overlay {
+    opacity: 1;
+  }
+  .premium-gallery-card:hover .media-meta-overlay span {
+    transform: translateY(0);
+  }
+
+  /* -----------------------------------------
+     5. DESIGNER NATiVE GLASS LIGHTBOX MODAL
+  ----------------------------------------- */
+  .luxury-lightbox-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(11, 15, 25, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .luxury-lightbox-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .lightbox-view-target {
+    max-width: 90%;
+    max-height: 80vh;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    transform: scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .luxury-lightbox-modal.active .lightbox-view-target {
+    transform: scale(1);
+  }
+  .btn-close-lightbox {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: var(--spring-transition);
+  }
+  .btn-close-lightbox:hover {
+    background-color: #FFFFFF;
+    color: var(--deep-ink);
+    transform: rotate(90deg);
+  }
+
+  @media (max-width: 767.98px) {
+    .gallery-hero { padding: 4.5rem 0; }
+    .gallery-hero h1 { font-size: 2.75rem; }
+    .gallery-section { padding: 3.5rem 0; }
+    .filter-bar-capsule { border-radius: 20px; width: 100%; }
+    .btn-filter-pill { width: 100%; text-align: center; }
+  }
+</style>
+
+<!-- Modern Creative Hero Header Banner -->
+<section class="gallery-hero">
+  <div class="container px-4">
+    <h1>Visual <span>Chronicles</span> & Fieldwork</h1>
+    <p>Documented moments of resource routing distributions, volunteer frameworks, and field operations metrics inside our live ecosystem tracks.</p>
+  </div>
+</section>
+
+<!-- Core Main Content Display Block Section -->
+<section class="gallery-section">
+  <div class="container px-4">
+
+    <!-- Unified Rounded Segment Filtering Bar Component -->
+    <div class="filter-bar-capsule">
+      <a href="{% url 'gallery' %}" class="btn-filter-pill {% if not active_category %}filter-active{% else %}filter-inactive{% endif %}">
+        All Media
+      </a>
+      {% for category in categories %}
+        <a href="?category={{ category.slug }}" class="btn-filter-pill {% if active_category == category.slug %}filter-active{% else %}filter-inactive{% endif %}">
+          {{ category.name }}
+        </a>
+      {% endfor %}
+    </div>
+
+    <!-- Controlled Responsive Media Grid Base Structure -->
+    <div class="gallery-grid-system">
+      {% for item in gallery_items %}
+
+        <!-- Condition 1: System Image Media Record Asset -->
+        {% if item.media_type == 'image' and item.image %}
+          <div class="premium-gallery-card custom-trigger-lightbox" data-src="{{ item.image.url }}">
+            <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
+            <div class="media-meta-overlay">
+              <span>{{ item.title }}</span>
+            </div>
+          </div>
+
+        <!-- Condition 2: Video Asset Route Wrapper Links -->
+        {% elif item.video_url %}
+          <a href="{{ item.video_url }}" class="premium-gallery-card text-decoration-none" target="_blank">
+            <div class="video-canvas-placeholder">
+              <div class="play-icon-hub">
+                <i class="bi bi-play-fill" style="transform: translateX(2px);"></i>
+              </div>
+            </div>
+            <div class="media-meta-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 100%);">
+              <span>{{ item.title }}</span>
+            </div>
+          </a>
+        {% endif %}
+
+      {% empty %}
+        <!-- Premium Design Studio Fallback Mock Grid Array (Renders when backend records are empty) -->
+        <div class="premium-gallery-card custom-trigger-lightbox" data-src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80">
+          <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=500&q=80" alt="Mock Up Grid Portfolio Item">
+          <div class="media-meta-overlay"><span>Community Distribution Operations</span></div>
+        </div>
+        <div class="premium-gallery-card custom-trigger-lightbox" data-src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80">
+          <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=500&q=80" alt="Mock Up Grid Portfolio Item">
+          <div class="media-meta-overlay"><span>Volunteer Education Seminar</span></div>
+        </div>
+        <div class="premium-gallery-card custom-trigger-lightbox" data-src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=800&q=80">
+          <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=500&q=80" alt="Mock Up Grid Portfolio Item">
+          <div class="media-meta-overlay"><span>Regional Infrastructure Strategy Workshop</span></div>
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<!-- 5. DESIGNER NATIVE GLASS BLUR LIGHTBOX MODAL -->
+<div class="luxury-lightbox-modal" id="designerLightbox">
+  <button type="button" class="btn-close-lightbox" id="closeLightboxBtn">
+    <i class="bi bi-x-lg"></i>
+  </button>
+  <img src="" alt="Active View Sheet Display Target" class="lightbox-view-target" id="lightboxTargetImg">
+</div>
+{% endblock %}
+
+<!-- Javascript Event Routing Handlers Slot Block -->
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const lightboxModal = document.getElementById('designerLightbox');
+    const lightboxImg = document.getElementById('lightboxTargetImg');
+    const closeBtn = document.getElementById('closeLightboxBtn');
+    const triggerCards = document.querySelectorAll('.custom-trigger-lightbox');
+
+    // Open Lightbox event pipeline
+    triggerCards.forEach(card => {
+      card.addEventListener('click', function() {
+        const targetSrc = this.getAttribute('data-src');
+        if (targetSrc) {
+          lightboxImg.setAttribute('src', targetSrc);
+          lightboxModal.classList.add('active');
+          document.body.style.overflow = 'hidden'; // Lock primary viewport background track window scroll
+        }
+      });
+    });
+
+    // Close Lightbox pipeline handler function
+    function closeLightbox() {
+      lightboxModal.classList.remove('active');
+      setTimeout(() => {
+        lightboxImg.setAttribute('src', '');
+      }, 300);
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+
+    // Close on outer backdrop background shield click container
+    lightboxModal.addEventListener('click', function(e) {
+      if (e.target === lightboxModal) {
+        closeLightbox();
+      }
+    });
+
+    // Close window via keyboard Escape key vector trigger
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && lightboxModal.classList.contains('active')) {
+        closeLightbox();
+      }
+    });
+  });
+</script>
+{% endblock %}

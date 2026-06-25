@@ -1,0 +1,21 @@
+<section class="section">
+  <div class="container">
+    <div class="section-title"><span class="eyebrow">Impact</span><h2>{{ title }}</h2></div>
+    <div class="row g-4">
+      {% for cause in causes %}
+        <div class="col-md-6 col-lg-4">
+          <article class="card h-100 cause-card">
+            {% if cause.image %}<img src="{{ cause.image.url }}" class="card-img-top" alt="{{ cause.title }}">{% endif %}
+            <div class="card-body">
+              <h5>{{ cause.title }}</h5>
+              <p>{{ cause.short_description }}</p>
+              <span class="badge text-bg-success">Goal: INR {{ cause.goal_amount }}</span>
+            </div>
+          </article>
+        </div>
+      {% empty %}
+        <p class="text-muted">Add causes from the admin panel.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
