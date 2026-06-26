@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'helpinghandngo.onrender.com'
 ]
 
 MIDDLEWARE = [
